@@ -9,16 +9,34 @@ import { Button, Footer } from "../Styles/Styled";
 
 class App extends Component {
   state = {
-	  players: 1
+    players: [
+      {
+        id: 1
+      }
+    ]
   };
 
   addPlayer = () => {
-	  if (this.state.players < 6) {
-		  this.setState({
-			  players: this.state.players + 1
-		  });
-	  }
-  }
+    if (this.state.players.length < 6) {
+      this.setState({
+        players: [
+          ...this.state.players,
+          {
+            id: this.state.players[this.state.players.length - 1].id + 1
+          }
+        ]
+      });
+    }
+  };
+
+  removePlayer = e => {
+    const players = this.state.players.filter(player => {
+      return player.id !== e.player.id;
+    });
+    this.setState({
+      players
+    });
+  };
 
   render() {
     return (
@@ -32,7 +50,13 @@ class App extends Component {
             <h1>Players</h1>
           </header>
           <section>
-					{[...Array(this.state.players)].map((i) => <Player key={i}>♦</Player>)}
+            {this.state.players.map((player, i) => (
+              <Player
+                player={player}
+                key={i}
+                removePlayer={this.removePlayer}
+              />
+            ))}
           </section>
           <Footer>
             <Button onClick={this.addPlayer}>
