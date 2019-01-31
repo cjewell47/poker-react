@@ -11,7 +11,12 @@ class App extends Component {
   state = {
     players: [
       {
-        id: 1
+        id: 1,
+        name: "Player 1"
+      },
+      {
+        id: 2,
+        name: "Player 2"
       }
     ]
   };
@@ -22,7 +27,10 @@ class App extends Component {
         players: [
           ...this.state.players,
           {
-            id: this.state.players[this.state.players.length - 1].id + 1
+            id: this.state.players[this.state.players.length - 1].id + 1,
+            name:
+              "Player " +
+              (this.state.players[this.state.players.length - 1].id + 1)
           }
         ]
       });
@@ -30,12 +38,28 @@ class App extends Component {
   };
 
   removePlayer = e => {
-    const players = this.state.players.filter(player => {
-      return player.id !== e.player.id;
-    });
-    this.setState({
-      players
-    });
+    if (this.state.players.length > 2) {
+      const players = this.state.players.filter(player => {
+        return player.id !== e.id;
+      });
+      this.setState({ players });
+    }
+  };
+
+  editPlayer = (p, newName) => {
+      const newP = p;
+      newP.name = newName
+      const players = this.state.players.map(player => {
+        if (player.id !== p.id) {
+          return player
+        } else {
+          return newP
+        }
+      });
+      this.setState({ 
+        players: players
+      });
+
   };
 
   render() {
@@ -55,6 +79,7 @@ class App extends Component {
                 player={player}
                 key={i}
                 removePlayer={this.removePlayer}
+                editPlayer={this.editPlayer}
               />
             ))}
           </section>
