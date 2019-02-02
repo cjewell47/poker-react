@@ -32,27 +32,10 @@ class App extends Component {
     return card;
   };
 
-  assignCardsToPlayers = (cards, init) => {
-    const hands = [];
-
-    while (cards.length > 0) hands.push(cards.splice(0, 5));
-
-    if (init) {
-      const players = this.state.players;
-      players[0].cards = hands[0];
-      players[1].cards = hands[1];
-      this.setState({
-        players: players
-      })
-    }
-
-    console.log(hands);
-    return hands;
-  };
-
   dealCards = (n, init) => {
     const cardsNeeded = n * 5,
       cards = this.state.selected.length ? this.state.selected : [];
+
     while (cards.length < cardsNeeded) {
       const newCard = this.randomCard();
       if (cards.indexOf(newCard) === -1) {
@@ -67,6 +50,24 @@ class App extends Component {
 
     const selected = [].slice.call(cards);
     return this.assignCardsToPlayers(selected, init);
+  };
+
+  assignCardsToPlayers = (cards, init) => {
+    const hands = [];
+
+    while (cards.length > 0) hands.push(cards.splice(0, 5));
+
+    if (init) {
+      const players = this.state.players;
+      players[0].cards = hands[0];
+      players[1].cards = hands[1];
+      this.setState({
+        players: players
+      });
+    }
+
+    console.log(hands);
+    return hands;
   };
 
   addPlayer = () => {
@@ -92,7 +93,16 @@ class App extends Component {
       const players = this.state.players.filter(player => {
         return player.id !== e.id;
       });
-      this.setState({ players });
+
+      const cards = e.cards,
+        selected = this.state.selected.filter(card => {
+          return cards.indexOf(card) === -1;
+        });
+
+      this.setState({
+        players,
+        selected
+      });
     }
   };
 
@@ -133,7 +143,6 @@ class App extends Component {
                 key={i}
                 removePlayer={this.removePlayer}
                 editPlayer={this.editPlayer}
-                selected={this.state.selected}
               />
             ))}
           </section>

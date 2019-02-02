@@ -51,8 +51,8 @@ class Player extends Component {
         </p>
         <PlayerHand>
           {this.props.player.cards.map(card => (
-            <Card suit={card[0]} value={card[1]}>
-            {card[1]}
+            <Card key={this.props.player.id + card} suit={card[0]} value={card[1]}>
+              {card[1]}
             </Card>
           ))}
         </PlayerHand>
