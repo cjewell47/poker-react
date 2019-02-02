@@ -35,9 +35,9 @@ class App extends Component {
     return card;
   };
 
-  dealCards = (n, init) => {
+  dealCards = (n, init, restart) => {
     const cardsNeeded = n * 5,
-      cards = this.state.selected.length ? this.state.selected : [];
+      cards = this.state.selected.length && !restart ? this.state.selected : [];
 
     while (cards.length < cardsNeeded) {
       const newCard = this.randomCard();
@@ -134,8 +134,9 @@ class App extends Component {
     });
 
     const winner = (a, b) => {
-      const args = [a, b];
-      const best = poker.judgeWinner([hands[a], hands[b]]);
+      const args = [a, b],
+        best = poker.judgeWinner([hands[a], hands[b]]);
+
       return args[best];
     };
 
@@ -153,11 +154,32 @@ class App extends Component {
         player.winner = true;
         return player;
       } else {
+        player.winner = false;
         return player;
       }
     });
     this.setState({
       players
+    });
+  };
+
+  handleRestart = () => {
+    const hands = this.dealCards(2, false, true);
+    this.setState({
+      players: [
+        {
+          id: 1,
+          name: "Player 1",
+          cards: hands[0],
+          winner: false
+        },
+        {
+          id: 2,
+          name: "Player 2",
+          cards: hands[1],
+          winner: false
+        }
+      ]
     });
   };
 
@@ -202,6 +224,12 @@ class App extends Component {
                 🏆
               </span>
               Find the winner
+            </Button>
+            <Button onClick={this.handleRestart}>
+              <span role="img" alt="flag" aria-label="flag">
+                🏁
+              </span>
+              Restart
             </Button>
           </Footer>
         </section>
