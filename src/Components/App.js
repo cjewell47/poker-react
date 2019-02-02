@@ -7,6 +7,8 @@ import Deck from "./Deck";
 import Player from "./Player";
 import { Button, Footer } from "../Styles/Styled";
 
+const poker = require("poker-hands");
+
 class App extends Component {
   state = {
     players: [
@@ -27,7 +29,7 @@ class App extends Component {
   randomCard = () => {
     const suit = suits[Math.floor(Math.random() * suits.length)],
       value = values[Math.floor(Math.random() * values.length)],
-      card = suit + value;
+      card = value + suit;
     console.log(card);
     return card;
   };
@@ -55,7 +57,9 @@ class App extends Component {
   assignCardsToPlayers = (cards, init) => {
     const hands = [];
 
-    while (cards.length > 0) hands.push(cards.splice(0, 5));
+    while (cards.length > 0) {
+      hands.push(cards.splice(0, 5));
+    }
 
     if (init) {
       const players = this.state.players;
@@ -107,19 +111,28 @@ class App extends Component {
   };
 
   editPlayer = (p, newName) => {
-    const newP = p;
-    newP.name = newName;
+    const editedPlayer = p;
+    editedPlayer.name = newName;
     const players = this.state.players.map(player => {
       if (player.id !== p.id) {
         return player;
       } else {
-        return newP;
+        return editedPlayer;
       }
     });
     this.setState({
       players: players
     });
   };
+
+  findWinner = () => {
+    const hands = this.state.players.map(player => {
+      return player.cards.toString().split(',').join(' ')
+    });
+
+    console.log([String(hands[0]), String(hands[1])]);
+    console.log(poker.judgeWinner([String(hands[0]), String(hands[1])]));
+  }
 
   componentDidMount() {
     this.dealCards(2, true);
@@ -157,7 +170,7 @@ class App extends Component {
               </span>
               Add new player
             </Button>
-            <Button>
+            <Button onClick={this.findWinner}>
               <span role="img" alt="trophy" aria-label="trophy">
                 🏆
               </span>
