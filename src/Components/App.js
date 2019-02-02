@@ -12,14 +12,38 @@ class App extends Component {
     players: [
       {
         id: 1,
-        name: "Player 1"
+        name: "Player 1",
+        cards: []
       },
       {
         id: 2,
-        name: "Player 2"
+        name: "Player 2",
+        cards: []
       }
     ],
     selected: []
+  };
+
+  randomCard = () => {
+    const suit = suits[Math.floor(Math.random() * suits.length)],
+      value = values[Math.floor(Math.random() * values.length)],
+      card = suit + value;
+    console.log(card);
+    return card;
+  };
+
+  dealCards = (n) => {
+    const cardsNeeded = n * 5,
+      cards = this.state.selected.length ? this.state.selected : [];
+    while (cards.length < cardsNeeded) {
+      const newCard = this.randomCard();
+      if (cards.indexOf(newCard) === -1) {
+        cards.push(newCard);
+      }
+    }
+    this.setState({
+      selected: cards
+    });
   };
 
   addPlayer = () => {
@@ -31,10 +55,12 @@ class App extends Component {
             id: this.state.players[this.state.players.length - 1].id + 1,
             name:
               "Player " +
-              (this.state.players[this.state.players.length - 1].id + 1)
+              (this.state.players[this.state.players.length - 1].id + 1),
+            cards: []
           }
         ]
       });
+      this.dealCards(this.state.players.length + 1);
     }
   };
 
@@ -62,29 +88,8 @@ class App extends Component {
     });
   };
 
-  randomCard = () => {
-    const suit = suits[Math.floor(Math.random() * suits.length)],
-      value = values[Math.floor(Math.random() * values.length)],
-      card = suit + value;
-    if (this.state.selected.indexOf(card) === -1) {
-      console.log(card);
-      this.setState({
-        selected: [...this.state.selected, card]
-      });
-    } else {
-      this.randomCard();
-    }
-  };
-
-  dealCards = () => {
-    const cardsNeeded = this.state.players.length * 5;
-    for (let i = 0; i < cardsNeeded; i++) {
-      this.randomCard();
-    } 
-  }
-
   componentDidMount() {
-    this.dealCards()
+    this.dealCards(2);
   }
 
   render() {
@@ -105,6 +110,7 @@ class App extends Component {
                 key={i}
                 removePlayer={this.removePlayer}
                 editPlayer={this.editPlayer}
+                selected={this.state.selected}
               />
             ))}
           </section>
