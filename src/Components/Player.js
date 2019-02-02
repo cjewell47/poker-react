@@ -50,21 +50,11 @@ class Player extends Component {
           </Button>
         </p>
         <PlayerHand>
-          <Card suit="D" value="A">
-            A
-          </Card>
-          <Card suit="D" value="K">
-            K
-          </Card>
-          <Card suit="D" value="Q">
-            Q
-          </Card>
-          <Card suit="D" value="J">
-            J
-          </Card>
-          <Card suit="D" value="T">
-            T
-          </Card>
+          {this.props.player.cards.map(card => (
+            <Card suit={card[0]} value={card[1]}>
+            {card[1]}
+            </Card>
+          ))}
         </PlayerHand>
       </article>
     );
