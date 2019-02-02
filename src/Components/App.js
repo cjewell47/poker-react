@@ -32,7 +32,25 @@ class App extends Component {
     return card;
   };
 
-  dealCards = (n) => {
+  assignCardsToPlayers = (cards, init) => {
+    const hands = [];
+
+    while (cards.length > 0) hands.push(cards.splice(0, 5));
+
+    if (init) {
+      const players = this.state.players;
+      players[0].cards = hands[0];
+      players[1].cards = hands[1];
+      this.setState({
+        players: players
+      })
+    }
+
+    console.log(hands);
+    return hands;
+  };
+
+  dealCards = (n, init) => {
     const cardsNeeded = n * 5,
       cards = this.state.selected.length ? this.state.selected : [];
     while (cards.length < cardsNeeded) {
@@ -41,13 +59,19 @@ class App extends Component {
         cards.push(newCard);
       }
     }
+
+    console.log("cards", cards);
     this.setState({
       selected: cards
     });
+
+    const selected = [].slice.call(cards);
+    return this.assignCardsToPlayers(selected, init);
   };
 
   addPlayer = () => {
     if (this.state.players.length < 6) {
+      const hands = this.dealCards(this.state.players.length + 1);
       this.setState({
         players: [
           ...this.state.players,
@@ -56,11 +80,10 @@ class App extends Component {
             name:
               "Player " +
               (this.state.players[this.state.players.length - 1].id + 1),
-            cards: []
+            cards: hands[hands.length - 1]
           }
         ]
       });
-      this.dealCards(this.state.players.length + 1);
     }
   };
 
@@ -89,7 +112,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.dealCards(2);
+    this.dealCards(2, true);
   }
 
   render() {
