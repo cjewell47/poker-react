@@ -26,6 +26,7 @@ class Player extends Component {
     return (
       <article id={this.props.player.id}>
         <p>
+          {this.props.player.winner ? 'WINNER:' : ''}
           {this.props.player.name}
           <Button onClick={this.handleEdit}>
             <span role="img" alt="pencil" aria-label="pencil">

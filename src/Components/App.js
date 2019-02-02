@@ -127,25 +127,39 @@ class App extends Component {
 
   findWinner = () => {
     const hands = this.state.players.map(player => {
-      return player.cards.toString().split(',').join(' ')
+      return player.cards
+        .toString()
+        .split(",")
+        .join(" ");
     });
-    
-    const winner = (a,b) =>  {
-      console.log(a,b)
+
+    const winner = (a, b) => {
       const args = [a, b];
       const best = poker.judgeWinner([hands[a], hands[b]]);
       return args[best];
-    }
+    };
 
-      let prospect = 0;
-      const len = hands.length;
-      let i = 1;
-      while (i < len) {
-        prospect = winner(prospect, i);
-        i++;
+    let prospect = 0;
+    const len = hands.length;
+    let i = 1;
+    while (i < len) {
+      prospect = winner(prospect, i);
+      i++;
+    }
+    console.log("winner", prospect);
+
+    const players = this.state.players.filter((player, index) => {
+      if (index === prospect) {
+        player.winner = true;
+        return player;
+      } else {
+        return player;
       }
-      console.log('winner', prospect)
-  }
+    });
+    this.setState({
+      players
+    });
+  };
 
   componentDidMount() {
     this.dealCards(2, true);
