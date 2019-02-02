@@ -18,7 +18,8 @@ class App extends Component {
         id: 2,
         name: "Player 2"
       }
-    ]
+    ],
+    selected: []
   };
 
   addPlayer = () => {
@@ -47,27 +48,51 @@ class App extends Component {
   };
 
   editPlayer = (p, newName) => {
-      const newP = p;
-      newP.name = newName
-      const players = this.state.players.map(player => {
-        if (player.id !== p.id) {
-          return player
-        } else {
-          return newP
-        }
-      });
-      this.setState({ 
-        players: players
-      });
-
+    const newP = p;
+    newP.name = newName;
+    const players = this.state.players.map(player => {
+      if (player.id !== p.id) {
+        return player;
+      } else {
+        return newP;
+      }
+    });
+    this.setState({
+      players: players
+    });
   };
+
+  randomCard = () => {
+    const suit = suits[Math.floor(Math.random() * suits.length)],
+      value = values[Math.floor(Math.random() * values.length)],
+      card = suit + value;
+    if (this.state.selected.indexOf(card) === -1) {
+      console.log(card);
+      this.setState({
+        selected: [...this.state.selected, card]
+      });
+    } else {
+      this.randomCard();
+    }
+  };
+
+  dealCards = () => {
+    const cardsNeeded = this.state.players.length * 5;
+    for (let i = 0; i < cardsNeeded; i++) {
+      this.randomCard();
+    } 
+  }
+
+  componentDidMount() {
+    this.dealCards()
+  }
 
   render() {
     return (
       <Layout>
         <section>
           <h1>Cards deck</h1>
-          <Deck suits={suits} values={values} />
+          <Deck suits={suits} values={values} selected={this.state.selected} />
         </section>
         <section>
           <header>

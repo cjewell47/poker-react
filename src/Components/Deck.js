@@ -1,7 +1,7 @@
 import React from "react";
 import { Card } from "../Styles/Styled";
 
-const Deck = ({ suits, values }) => (
+const Deck = ({ suits, values, selected }) => (
   <>
     {suits.map(suit => (
       <div key={suit}>

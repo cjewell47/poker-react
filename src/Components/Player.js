@@ -4,26 +4,27 @@ import { Card, Button, PlayerHand } from "../Styles/Styled";
 class Player extends Component {
   state = {
     showEditField: false,
-    newName: ''
+    newName: ""
   };
 
   handleEdit = () => {
-    if (this.state.showEditField && this.state.newName !== '') {
+    if (this.state.showEditField && this.state.newName !== "") {
       this.props.editPlayer(this.props.player, this.state.newName);
     }
     this.setState({
       showEditField: !this.state.showEditField
     });
-  }
+  };
 
   handleChange = e => {
     this.setState({
       newName: e.target.value
     });
-  }
+  };
 
   render() {
-    return <article id={this.props.player.id}>
+    return (
+      <article id={this.props.player.id}>
         <p>
           {this.props.player.name}
           <Button onClick={this.handleEdit}>
@@ -32,7 +33,15 @@ class Player extends Component {
             </span>
             {this.state.showEditField ? "Confirm" : "Edit"}
           </Button>
-          {this.state.showEditField ? <input onChange={this.handleChange} placeholder={this.props.player.name} type="text" /> : ""}
+          {this.state.showEditField ? (
+            <input
+              onChange={this.handleChange}
+              placeholder={this.props.player.name}
+              type="text"
+            />
+          ) : (
+            ""
+          )}
           <Button onClick={() => this.props.removePlayer(this.props.player)}>
             <span role="img" alt="flame" aria-label="flame">
               🔥
@@ -57,7 +66,8 @@ class Player extends Component {
             T
           </Card>
         </PlayerHand>
-      </article>;
+      </article>
+    );
   }
 }
 
