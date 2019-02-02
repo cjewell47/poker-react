@@ -15,12 +15,14 @@ class App extends Component {
       {
         id: 1,
         name: "Player 1",
-        cards: []
+        cards: [],
+        winner: false
       },
       {
         id: 2,
         name: "Player 2",
-        cards: []
+        cards: [],
+        winner: false
       }
     ],
     selected: []
@@ -30,7 +32,6 @@ class App extends Component {
     const suit = suits[Math.floor(Math.random() * suits.length)],
       value = values[Math.floor(Math.random() * values.length)],
       card = value + suit;
-    console.log(card);
     return card;
   };
 
@@ -45,7 +46,6 @@ class App extends Component {
       }
     }
 
-    console.log("cards", cards);
     this.setState({
       selected: cards
     });
@@ -70,7 +70,6 @@ class App extends Component {
       });
     }
 
-    console.log(hands);
     return hands;
   };
 
@@ -85,7 +84,8 @@ class App extends Component {
             name:
               "Player " +
               (this.state.players[this.state.players.length - 1].id + 1),
-            cards: hands[hands.length - 1]
+            cards: hands[hands.length - 1],
+            winner: false
           }
         ]
       });
@@ -129,9 +129,22 @@ class App extends Component {
     const hands = this.state.players.map(player => {
       return player.cards.toString().split(',').join(' ')
     });
+    
+    const winner = (a,b) =>  {
+      console.log(a,b)
+      const args = [a, b];
+      const best = poker.judgeWinner([hands[a], hands[b]]);
+      return args[best];
+    }
 
-    console.log([String(hands[0]), String(hands[1])]);
-    console.log(poker.judgeWinner([String(hands[0]), String(hands[1])]));
+      let prospect = 0;
+      const len = hands.length;
+      let i = 1;
+      while (i < len) {
+        prospect = winner(prospect, i);
+        i++;
+      }
+      console.log('winner', prospect)
   }
 
   componentDidMount() {
